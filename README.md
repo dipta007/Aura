@@ -108,6 +108,12 @@ Uses a power curve (exponent 0.6) for more aggressive dimming at mid-range lumin
 **Debug logs**
 - Check `/tmp/lumenx.log` for detailed per-tick diagnostics
 
+## Contributing
+
+Contributions are welcome — including AI-assisted contributions, as long as they are **human-reviewed and tested** on real hardware before submitting.
+
+See the [Contributing Guide](CONTRIBUTING.md) for setup instructions, project structure, and guidelines.
+
 ## Credits
 
 - [m1ddc](https://github.com/waydabber/m1ddc) by waydabber — DDC/CI control for Apple Silicon (MIT License, bundled with permission)
