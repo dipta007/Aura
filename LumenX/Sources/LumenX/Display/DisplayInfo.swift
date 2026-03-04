@@ -8,6 +8,7 @@ struct DisplayInfo: Identifiable {
     var currentBrightness: Float = 0.5
     var targetBrightness: Float = 0.5
     var isEnabled: Bool = true
+    var isAutoMode: Bool = true
     var minBrightness: Float = Constants.defaultMinBrightness
     var maxBrightness: Float = Constants.defaultMaxBrightness
 }

@@ -23,7 +23,7 @@ struct MenuBarView: View {
 
             // Per-display controls
             ForEach(displayManager.displays) { display in
-                DisplayRowView(display: display, displayManager: displayManager)
+                DisplayRowView(display: display, displayManager: displayManager, brightnessController: engine.brightnessController)
             }
 
             Divider()

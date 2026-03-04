@@ -34,6 +34,7 @@ class DisplayManager: ObservableObject {
                 isBuiltIn: isBuiltIn,
                 bounds: bounds,
                 isEnabled: settings.isEnabled,
+                isAutoMode: settings.isAutoMode,
                 minBrightness: settings.minBrightness,
                 maxBrightness: settings.maxBrightness
             )

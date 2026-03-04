@@ -14,6 +14,8 @@ class Preferences: ObservableObject {
 
     struct DisplaySettings: Codable {
         var isEnabled: Bool = true
+        var isAutoMode: Bool = true
+        var manualBrightness: Float = 0.5
         var minBrightness: Float = Constants.defaultMinBrightness
         var maxBrightness: Float = Constants.defaultMaxBrightness
     }

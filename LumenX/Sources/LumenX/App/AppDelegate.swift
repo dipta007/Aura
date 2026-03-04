@@ -3,35 +3,37 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
     let displayManager = DisplayManager()
     lazy var engine = AdaptiveEngine(displayManager: displayManager)
+    lazy var keyboardHandler = KeyboardBrightnessHandler(displayManager: displayManager, brightnessController: engine.brightnessController)
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Request screen capture permission
-        let hasPermission = CGPreflightScreenCaptureAccess()
-        if !hasPermission {
-            CGRequestScreenCaptureAccess()
-            let alert = NSAlert()
-            alert.messageText = "Screen Recording Permission Required"
-            alert.informativeText = "LumenX needs screen recording access to analyze what's on each display and adjust brightness accordingly. Please grant access in System Settings → Privacy & Security → Screen Recording, then relaunch the app."
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: "Open System Settings")
-            alert.addButton(withTitle: "Quit")
+        // Disable automatic termination for menu-bar-only app
+        NSApp.disableRelaunchOnLogin()
+        ProcessInfo.processInfo.disableSuddenTermination()
+        ProcessInfo.processInfo.disableAutomaticTermination("Menu bar app")
 
-            let response = alert.runModal()
-            if response == .alertFirstButtonReturn {
-                NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")!)
+        // Request screen capture permission only once
+        if !CGPreflightScreenCaptureAccess() {
+            let hasRequested = UserDefaults.standard.bool(forKey: "hasRequestedScreenCapture")
+            if !hasRequested {
+                CGRequestScreenCaptureAccess()
+                UserDefaults.standard.set(true, forKey: "hasRequestedScreenCapture")
             }
-            NSApplication.shared.terminate(nil)
-            return
         }
 
-        // Start the engine
+        // Start the engine regardless — captures will return nil without permission
+        // but the menu bar UI will still be visible
         displayManager.refresh()
         engine.start()
+        keyboardHandler.start()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        keyboardHandler.stop()
         engine.stop()
-        // Restore all displays to their gamma tables
         CGDisplayRestoreColorSyncSettings()
+    }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return false
     }
 }
