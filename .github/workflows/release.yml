@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: macos-14 # Apple Silicon runner
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install m1ddc
+        run: brew install m1ddc
+
+      - name: Build release binary
+        run: swift build -c release
+
+      - name: Create app bundle
+        run: |
+          mkdir -p dist/LumenX.app/Contents/MacOS
+          mkdir -p dist/LumenX.app/Contents/Resources
+
+          cp .build/release/LumenX dist/LumenX.app/Contents/MacOS/
+          cp LumenX.app/Contents/Info.plist dist/LumenX.app/Contents/
+
+          # Bundle m1ddc
+          cp $(which m1ddc) dist/LumenX.app/Contents/Resources/m1ddc
+          chmod +x dist/LumenX.app/Contents/Resources/m1ddc
+
+          # Copy m1ddc license
+          M1DDC_PREFIX=$(brew --prefix m1ddc)
+          if [ -f "$M1DDC_PREFIX/LICENSE" ]; then
+            cp "$M1DDC_PREFIX/LICENSE" dist/LumenX.app/Contents/Resources/m1ddc-LICENSE
+          fi
+
+          # Ad-hoc codesign
+          codesign --force --deep --sign - dist/LumenX.app
+
+      - name: Create DMG
+        run: |
+          hdiutil create -volname "LumenX" -srcfolder dist/LumenX.app -ov -format UDZO dist/LumenX.dmg
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/LumenX.dmg
+          generate_release_notes: true

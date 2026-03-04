@@ -1,0 +1,98 @@
+name: Bug Report
+description: Report a bug with LumenX
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill in the details below so we can reproduce and fix it.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug clearly. What did you expect vs what actually happened?
+      placeholder: "When I switch to a bright page, the brightness doesn't change..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How can we reproduce this?
+      placeholder: |
+        1. Open LumenX
+        2. Switch to a bright webpage
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: mac-model
+    attributes:
+      label: Mac model
+      description: "e.g., Mac Studio M2 Max, MacBook Pro M3 Pro"
+      placeholder: "Mac Studio M2 Max"
+    validations:
+      required: true
+
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS version
+      description: "System Settings → General → About"
+      placeholder: "macOS 15.2 Sequoia"
+    validations:
+      required: true
+
+  - type: textarea
+    id: monitors
+    attributes:
+      label: Monitor setup
+      description: List your monitors and how they're connected
+      placeholder: |
+        - BenQ RD320U via DisplayPort
+        - LG 27UK850 via USB-C
+    validations:
+      required: true
+
+  - type: dropdown
+    id: connection
+    attributes:
+      label: Connection type
+      description: How is the affected monitor connected?
+      options:
+        - DisplayPort
+        - USB-C / Thunderbolt
+        - HDMI
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Debug logs
+      description: |
+        Paste relevant lines from `/tmp/lumenx.log`.
+        Run `tail -50 /tmp/lumenx.log` in Terminal to grab recent logs.
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: permissions
+    attributes:
+      label: Permissions granted
+      options:
+        - label: Screen Recording permission is enabled for LumenX
+        - label: Accessibility permission is enabled for LumenX
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Screenshots, screen recordings, or anything else that might help.
+    validations:
+      required: false
